@@ -1,0 +1,5 @@
+@baseUrl = https://ncov2019-admin.firebaseapp.com
+@authorization = test
+# Used to get an access token given an autorization key
+POST {{baseUrl}}/token
+Authorization: Basic {{authorization}}
