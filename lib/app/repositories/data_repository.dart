@@ -10,19 +10,28 @@ class DataRepository {
 
   String _accessToken;
 
-  Future<int> getEndpointData(Endpoint endpoint) async {
+  Future<int> getEndpointData(Endpoint endpoint) async =>
+      await _getDataRefreshingToken<int>(
+        onGetData: () => apiService.getEndpointData(
+            accessToken: _accessToken, endpoint: endpoint),
+      );
+
+  Future<EndpointsData> getAllEndpointsData() async =>
+      await _getDataRefreshingToken<EndpointsData>(
+        onGetData: _getAllEndpointsData,
+      );
+
+  Future<T> _getDataRefreshingToken<T>({Future<T> Function() onGetData}) async {
     try {
       if (_accessToken == null) {
         _accessToken = await apiService.getAccessToken();
       }
-      return await apiService.getEndpointData(
-          accessToken: _accessToken, endpoint: endpoint);
+      return await onGetData();
     } on Response catch (response) {
       // if unauthorized, get access token again
       if (response.statusCode == 401) {
         _accessToken = await apiService.getAccessToken();
-        return await apiService.getEndpointData(
-            accessToken: _accessToken, endpoint: endpoint);
+        return await onGetData();
       }
       rethrow;
     }
