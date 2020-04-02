@@ -5,6 +5,7 @@ import 'package:coronavirus_rest_api_flutter_course/app/ui/endpoint_card.dart';
 import 'package:coronavirus_rest_api_flutter_course/app/ui/last_updated_status_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -21,9 +22,14 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _updateData() async {
-    final dataRepository = Provider.of<DataRepository>(context, listen: false);
-    final endpointsData = await dataRepository.getAllEndpointsData();
-    setState(() => _endpointsData = endpointsData);
+    try {
+      final dataRepository =
+          Provider.of<DataRepository>(context, listen: false);
+      final endpointsData = await dataRepository.getAllEndpointsData();
+      setState(() => _endpointsData = endpointsData);
+    } on SocketException catch (e) {
+      print(e);
+    }
   }
 
   @override
