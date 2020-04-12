@@ -28,7 +28,8 @@ class _DashboardState extends State<Dashboard> {
     try {
       final dataRepository =
           Provider.of<DataRepository>(context, listen: false);
-      final endpointsData = await dataRepository.getAllEndpointsData();
+      final endpointsData =
+          await dataRepository.getAllEndpointsData(country: 'Spain');
       setState(() => _endpointsData = endpointsData);
     } on SocketException catch (_) {
       showAlertDialog(

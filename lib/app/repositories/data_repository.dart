@@ -13,20 +13,27 @@ class DataRepository {
 
   String _accessToken;
 
-  Future<EndpointData> getEndpointData(Endpoint endpoint) async =>
+  Future<EndpointData> getEndpointData(Endpoint endpoint,
+          {String country}) async =>
       await _getDataRefreshingToken<EndpointData>(
         onGetData: () => apiService.getEndpointData(
-            accessToken: _accessToken, endpoint: endpoint),
+          accessToken: _accessToken,
+          endpoint: endpoint,
+          country: country,
+        ),
       );
 
-  EndpointsData getAllEndpointsCachedData() => dataCacheService.getData();
+  EndpointsData getAllEndpointsCachedData({String country}) =>
+      country == null ? dataCacheService.getData() : null;
 
-  Future<EndpointsData> getAllEndpointsData() async {
+  Future<EndpointsData> getAllEndpointsData({String country}) async {
     final endpointsData = await _getDataRefreshingToken<EndpointsData>(
-      onGetData: _getAllEndpointsData,
+      onGetData: () => _getAllEndpointsData(country: country),
     );
-    // save to cache
-    await dataCacheService.setData(endpointsData);
+    if (country == null) {
+      // save global data to cache
+      await dataCacheService.setData(endpointsData);
+    }
     return endpointsData;
   }
 
@@ -46,18 +53,33 @@ class DataRepository {
     }
   }
 
-  Future<EndpointsData> _getAllEndpointsData() async {
+  Future<EndpointsData> _getAllEndpointsData({String country}) async {
     final values = await Future.wait([
       apiService.getEndpointData(
-          accessToken: _accessToken, endpoint: Endpoint.cases),
+        accessToken: _accessToken,
+        endpoint: Endpoint.cases,
+        country: country,
+      ),
       apiService.getEndpointData(
-          accessToken: _accessToken, endpoint: Endpoint.casesSuspected),
+        accessToken: _accessToken,
+        endpoint: Endpoint.casesSuspected,
+        country: country,
+      ),
       apiService.getEndpointData(
-          accessToken: _accessToken, endpoint: Endpoint.casesConfirmed),
+        accessToken: _accessToken,
+        endpoint: Endpoint.casesConfirmed,
+        country: country,
+      ),
       apiService.getEndpointData(
-          accessToken: _accessToken, endpoint: Endpoint.deaths),
+        accessToken: _accessToken,
+        endpoint: Endpoint.deaths,
+        country: country,
+      ),
       apiService.getEndpointData(
-          accessToken: _accessToken, endpoint: Endpoint.recovered),
+        accessToken: _accessToken,
+        endpoint: Endpoint.recovered,
+        country: country,
+      ),
     ]);
     return EndpointsData(
       values: {
