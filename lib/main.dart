@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String _accessToken = '';
 
   void _updateAccessToken() async {
-    final apiService = APIService(API.sandbox());
+    final apiService = APIService(NubentosAPI.sandbox());
     final accessToken = await apiService.getAccessToken();
     setState(() => _accessToken = accessToken);
   }

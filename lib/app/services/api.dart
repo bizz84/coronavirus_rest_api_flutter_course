@@ -9,11 +9,17 @@ enum Endpoint {
   recovered,
 }
 
-class API {
-  API({@required this.apiKey});
+abstract class API {
+  String get apiKey;
+  Uri tokenUri();
+  Uri endpointUri(Endpoint endpoint);
+}
+
+class NubentosAPI implements API {
+  NubentosAPI({@required this.apiKey});
   final String apiKey;
 
-  factory API.sandbox() => API(apiKey: APIKeys.ncovSandboxKey);
+  factory NubentosAPI.sandbox() => NubentosAPI(apiKey: APIKeys.ncovSandboxKey);
 
   static final String host = 'apigw.nubentos.com';
   static final int port = 443;
@@ -38,6 +44,35 @@ class API {
     Endpoint.cases: 'cases',
     Endpoint.casesSuspected: 'cases/suspected',
     Endpoint.casesConfirmed: 'cases/confirmed',
+    Endpoint.deaths: 'deaths',
+    Endpoint.recovered: 'recovered',
+  };
+}
+
+class AdminAPI implements API {
+  AdminAPI({@required this.apiKey});
+  final String apiKey;
+
+  factory AdminAPI.sandbox() => AdminAPI(apiKey: APIKeys.adminSandboxKey);
+
+  static final String host = 'ncov2019-admin.firebaseapp.com';
+
+  Uri tokenUri() => Uri(
+        scheme: 'https',
+        host: host,
+        path: 'token',
+      );
+
+  Uri endpointUri(Endpoint endpoint) => Uri(
+        scheme: 'https',
+        host: host,
+        path: '${_paths[endpoint]}',
+      );
+
+  static Map<Endpoint, String> _paths = {
+    Endpoint.cases: 'cases',
+    Endpoint.casesSuspected: 'casesSuspected',
+    Endpoint.casesConfirmed: 'casesConfirmed',
     Endpoint.deaths: 'deaths',
     Endpoint.recovered: 'recovered',
   };
