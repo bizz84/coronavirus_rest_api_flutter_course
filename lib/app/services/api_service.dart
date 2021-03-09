@@ -11,7 +11,7 @@ class APIService {
 
   Future<String> getAccessToken() async {
     final response = await http.post(
-      api.tokenUri().toString(),
+      api.tokenUri(),
       headers: {'Authorization': 'Basic ${api.apiKey}'},
     );
     if (response.statusCode == 200) {
@@ -32,7 +32,7 @@ class APIService {
   }) async {
     final uri = api.endpointUri(endpoint);
     final response = await http.get(
-      uri.toString(),
+      uri,
       headers: {'Authorization': 'Bearer $accessToken'},
     );
     if (response.statusCode == 200) {
