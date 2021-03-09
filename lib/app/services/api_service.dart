@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:coronavirus_rest_api_flutter_course/app/services/endpoint_data.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:coronavirus_rest_api_flutter_course/app/services/api.dart';
 
@@ -27,8 +26,8 @@ class APIService {
   }
 
   Future<EndpointData> getEndpointData({
-    @required String accessToken,
-    @required Endpoint endpoint,
+    required String? accessToken,
+    required Endpoint endpoint,
   }) async {
     final uri = api.endpointUri(endpoint);
     final response = await http.get(
@@ -36,12 +35,12 @@ class APIService {
       headers: {'Authorization': 'Bearer $accessToken'},
     );
     if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
+      final data = json.decode(response.body) as List<dynamic>;
       if (data.isNotEmpty) {
-        final Map<String, dynamic> endpointData = data[0];
-        final String responseJsonKey = _responseJsonKeys[endpoint];
-        final int value = endpointData[responseJsonKey];
-        final String dateString = endpointData['date'];
+        final endpointData = data[0] as Map<String, dynamic>;
+        final responseJsonKey = _responseJsonKeys[endpoint] as String;
+        final value = endpointData[responseJsonKey] as int?;
+        final dateString = endpointData['date'] as String;
         final date = DateTime.tryParse(dateString);
         if (value != null) {
           return EndpointData(value: value, date: date);

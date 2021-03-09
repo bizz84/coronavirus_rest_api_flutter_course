@@ -10,9 +10,9 @@ class EndpointCardData {
 }
 
 class EndpointCard extends StatelessWidget {
-  const EndpointCard({Key key, this.endpoint, this.value}) : super(key: key);
-  final Endpoint endpoint;
-  final int value;
+  const EndpointCard({Key? key, this.endpoint, this.value}) : super(key: key);
+  final Endpoint? endpoint;
+  final int? value;
 
   static Map<Endpoint, EndpointCardData> _cardsData = {
     Endpoint.cases:
@@ -36,7 +36,7 @@ class EndpointCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardData = _cardsData[endpoint];
+    final cardData = _cardsData[endpoint!]!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: Card(
@@ -49,7 +49,7 @@ class EndpointCard extends StatelessWidget {
                 cardData.title,
                 style: Theme.of(context)
                     .textTheme
-                    .headline5
+                    .headline5!
                     .copyWith(color: cardData.color),
               ),
               SizedBox(height: 4),
@@ -62,7 +62,7 @@ class EndpointCard extends StatelessWidget {
                     Image.asset(cardData.assetName, color: cardData.color),
                     Text(
                       formattedValue,
-                      style: Theme.of(context).textTheme.headline4.copyWith(
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
                           color: cardData.color, fontWeight: FontWeight.w500),
                     ),
                   ],

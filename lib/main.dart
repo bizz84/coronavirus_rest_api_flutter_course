@@ -18,7 +18,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key, @required this.sharedPreferences}) : super(key: key);
+  const MyApp({Key? key, required this.sharedPreferences}) : super(key: key);
   final SharedPreferences sharedPreferences;
 
   // This widget is the root of your application.
