@@ -14,7 +14,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  EndpointsData _endpointsData;
+  late EndpointsData _endpointsData;
 
   @override
   void initState() {
@@ -50,9 +50,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final formatter = LastUpdatedDateFormatter(
-      lastUpdated: _endpointsData != null
-          ? _endpointsData.values[Endpoint.cases]?.date
-          : null,
+      lastUpdated: _endpointsData.values[Endpoint.cases]?.date,
     );
     return Scaffold(
       appBar: AppBar(
@@ -68,9 +66,7 @@ class _DashboardState extends State<Dashboard> {
             for (var endpoint in Endpoint.values)
               EndpointCard(
                 endpoint: endpoint,
-                value: _endpointsData != null
-                    ? _endpointsData.values[endpoint]?.value
-                    : null,
+                value: _endpointsData.values[endpoint]?.value,
               ),
           ],
         ),
